@@ -61,10 +61,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-      
+
     <build>
-        <outputDirectory>target/${project.artifactId}/WEB-INF/classes</outputDirectory> 
-                                   
+        <outputDirectory>target/${project.artifactId}/WEB-INF/classes</outputDirectory>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

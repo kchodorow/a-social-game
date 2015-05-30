@@ -4,13 +4,22 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <security-constraint>
+        <web-resource-collection>
+           <web-resource-name>game</web-resource-name>
+           <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+           <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint>
     <servlet>
-        <servlet-name>demo</servlet-name>
+        <servlet-name>game</servlet-name>
         <servlet-class>myapp.DemoServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>demo</servlet-name>
-        <url-pattern>/demo</url-pattern>
+        <servlet-name>game</servlet-name>
+        <url-pattern>/game</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
