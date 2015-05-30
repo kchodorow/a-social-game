@@ -1,10 +1,10 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update : update });
 
-var text;
+var tiles = [];
 var counter = 0;
 
 function preload () {
-    game.load.image('einstein', 'assets/mushroom.jpg');
+  ;  game.load.image('einstein', 'assets/mushroom.jpg');
 }
 
 function create() {
@@ -13,8 +13,13 @@ function create() {
 
     for (var i = game.world.centerX - width * 2; i <= game.world.centerX + width * 2; i += width) {
         for (var j = game.world.centerY - height * 2; j <= game.world.centerY + height * 2; j += height) {
-            var tile = new Tile(game.add.sprite(i, j, 'einstein'));
+            tiles.push(new Tile(game.add.sprite(i, j, 'einstein')));
         }
     }
-    text = game.add.text(250, 16, '', { fill: '#ffffff' });
-}
+};
+
+function update() {
+    for (var i = 0; i < tiles.length; ++i) {
+        tiles[i].update();
+    }
+};
