@@ -9,8 +9,9 @@ var Tile = function(sprite) {
     sprite.events.onInputOut.add(this.hideTimer_, this);
 
     this.level_ = 0;
-    this.timer_ = game.time.create(false);
-    this.timer_.add(11000, this.finish_, this);
+    // If there is a timer running for this tile.
+    this.timer_ = false;
+    // The text for the timer.
     this.text_ = game.add.text(this.sprite_.x, this.sprite_.y, '', { fill: '#ffffff' });
     this.text_.anchor.set(0.5);
     this.text_.visible = false;
@@ -24,17 +25,31 @@ Tile.WIDTH = 64;
 Tile.HEIGHT = 64;
 
 Tile.prototype.update = function() {
-    if (this.timer_.running) {
-        this.text_.text = this.getLevelTime_() - Math.floor(this.timer_.ms / 1000);
+    if (this.timer_) {
+        var secsRemaining = this.getLatencySecs() -
+                Math.floor((new Date().getTime() - this.start_ms_) / 1000);
+        if (secsRemaining == 0) {
+            this.timer_ = false;
+            this.finish_();
+        }
+        this.text_.text = secsRemaining;
     }
 };
 
+Tile.prototype.getLatencySecs = function() {
+    var time = [10, 100, 1000, 10000];
+    return time[this.level_];
+};
+
 Tile.prototype.listener_ = function() {
-    if (this.timer_.running) {
+    if (this.timer_) {
         return;
     }
+    this.timer_ = true;
+    // We don't use the in-game timer because we don't want pausing/switching
+    // tabs to pause the timer.
+    this.start_ms_ = new Date().getTime();
     this.text_.visible = true;
-    this.timer_.start();
     this.color_ -= this.color_inc_;
     this.sprite_.tint = this.color_;
 };
@@ -47,13 +62,7 @@ Tile.prototype.hideTimer_ = function() {
     this.text_.visible = false;
 };
 
-Tile.prototype.getLevelTime_ = function() {
-    var time = [10, 100, 1000, 10000];
-    return time[this.level_];
-};
-
 Tile.prototype.finish_ = function() {
-    this.timer_.stop();
     this.level_++;
     this.text_.visible = false;
 };
