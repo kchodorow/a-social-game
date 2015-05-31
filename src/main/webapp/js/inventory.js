@@ -1,14 +1,12 @@
 goog.provide('Inventory');
+goog.provide('Resource');
 
 var Inventory = function() {
-    var RESOURCE_START = 58;
-
-    this.num_resources_ = 4;
     this.inventory_ = [];
     var inventory_group = game.add.group();
-    var inventory_width = this.num_resources_ * 2 * Tile.WIDTH - Tile.WIDTH;
-    for (var i = 0; i < this.num_resources_; ++i) {
-        var resource = new Resource(inventory_group, RESOURCE_START + i);
+    var inventory_width = Resource.NUM * 2 * Tile.WIDTH - Tile.WIDTH;
+    for (var i = 0; i < Resource.NUM; ++i) {
+        var resource = new Resource(inventory_group, Resource.START_FRAME + i);
         var resource_sprite = resource.getSprite();
         resource_sprite.x = i * 2 * Tile.WIDTH;
         inventory_group.add(resource_sprite);
@@ -32,6 +30,9 @@ var Resource = function(parent, frame) {
     text.anchor.set(0.5);
     this.item_group_.add(text);
 };
+
+Resource.NUM = 4;
+Resource.START_FRAME = 58;
 
 Resource.prototype.getSprite = function() {
     return this.item_group_;

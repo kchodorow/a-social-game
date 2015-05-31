@@ -1,6 +1,8 @@
 goog.provide('Tile');
 goog.provide('Tile.EmptyTile');
 
+goog.require('Resource');
+
 var Tile = function(sprite) {
     this.sprite_ = sprite;
     sprite.anchor.set(0.5);
@@ -77,20 +79,32 @@ Tile.EmptyTile = function(sprite) {
 goog.inherits(Tile.EmptyTile, Tile);
 
 Tile.EmptyTile.prototype.listener = function() {
-    var modal = new gameModal(game);
-    modal.createModal({
-        type:"modal1",
-        includeBackground: true,
-        modalCloseOnInput: true,
-        itemsArr: [
-            {
-                type: "text",
-                content: "Simple Text with Modal background, \n nothing fancy here...",
-                fontSize: 42,
-                color: "0xFEFF49",
-                offsetY: -50
-            }
-        ]
-    });
-    modal.showModal("modal1");
+    var modal_group = game.add.group();
+
+    var modal = game.add.graphics(game.width, game.height);
+    modal.beginFill("0x000000", 0.7);
+    modal.x = 0;
+    modal.y = 0;
+    modal.inputEnabled = true;
+    modal.drawRect(0, 0, game.width, game.height);
+    modal_group.add(modal);
+
+    var item_width = Resource.NUM * 2 * Tile.WIDTH - Tile.WIDTH;
+    for (var i = 0; i < Resource.NUM; ++i) {
+        var resource_type = Resource.START_FRAME + i;
+        var item = game.add.sprite(i * 2 * Tile.WIDTH, 200, 'ms', resource_type);
+        item.width = Tile.WIDTH;
+        item.height = Tile.HEIGHT;
+        item.inputEnabled = true;
+        item.events.onInputDown.add(this.buy, {tile:this, store:modal_group, type:resource_type});
+        modal_group.add(item);
+    }
+    modal_group.x = game.world.centerX - item_width/2;
+
+    game.world.bringToTop(modal_group);
+};
+
+Tile.EmptyTile.prototype.buy = function() {
+    this.store.visible = false;
+    this.tile.sprite_.frame = this.type;
 };
