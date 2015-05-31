@@ -1,10 +1,13 @@
+goog.provide('Tile');
+goog.provide('Tile.EmptyTile');
+
 var Tile = function(sprite) {
     this.sprite_ = sprite;
     sprite.anchor.set(0.5);
     sprite.width = Tile.WIDTH;
     sprite.height = Tile.HEIGHT;
     sprite.inputEnabled = true;
-    sprite.events.onInputDown.add(this.listener_, this);
+    sprite.events.onInputDown.add(this.listener, this);
     sprite.events.onInputOver.add(this.showTimer_, this);
     sprite.events.onInputOut.add(this.hideTimer_, this);
 
@@ -41,7 +44,7 @@ Tile.prototype.getLatencySecs = function() {
     return time[this.level_];
 };
 
-Tile.prototype.listener_ = function() {
+Tile.prototype.listener = function() {
     if (this.timer_) {
         return;
     }
@@ -65,4 +68,29 @@ Tile.prototype.hideTimer_ = function() {
 Tile.prototype.finish_ = function() {
     this.level_++;
     this.text_.visible = false;
+};
+
+Tile.EmptyTile = function(sprite) {
+    goog.base(this, sprite);
+};
+
+goog.inherits(Tile.EmptyTile, Tile);
+
+Tile.EmptyTile.prototype.listener = function() {
+    var modal = new gameModal(game);
+    modal.createModal({
+        type:"modal1",
+        includeBackground: true,
+        modalCloseOnInput: true,
+        itemsArr: [
+            {
+                type: "text",
+                content: "Simple Text with Modal background, \n nothing fancy here...",
+                fontSize: 42,
+                color: "0xFEFF49",
+                offsetY: -50
+            }
+        ]
+    });
+    modal.showModal("modal1");
 };
