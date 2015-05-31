@@ -10,7 +10,11 @@ function preload () {
 function create() {
     var frames = game.cache.getFrameData('ms').getFrames();
 
-    for (var i = game.world.centerX - Tile.WIDTH * 2;
+    // Inventory.
+    var inventory = new Inventory();
+
+    // Board.
+    for (i = game.world.centerX - Tile.WIDTH * 2;
          i <= game.world.centerX + Tile.WIDTH * 2; i += Tile.WIDTH) {
         for (var j = game.world.centerY - Tile.HEIGHT * 2;
              j <= game.world.centerY + Tile.HEIGHT * 2; j += Tile.HEIGHT) {
